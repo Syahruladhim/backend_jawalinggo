@@ -52,6 +52,27 @@ python run.py
 
 Server default berjalan di `http://127.0.0.1:5000`.
 
+## Deploy ke Render dengan Gunicorn
+
+Repository ini menyediakan `render.yaml` di root project. Di Render, pilih **New > Blueprint**, hubungkan repository, lalu gunakan Blueprint tersebut untuk membuat web service `jawalinggo-backend`.
+
+Render akan menjalankan perintah berikut dari direktori `backend`:
+
+```bash
+pip install -r requirements.txt
+gunicorn --config gunicorn.conf.py run:app
+```
+
+Saat membuat Blueprint, isi environment variable rahasia yang bertanda `sync: false`:
+
+- `MONGO_URI`
+- `GOOGLE_AI_API_KEY`
+- `GOOGLE_CLIENT_ID`
+- `BREVO_API_KEY`
+- `BREVO_FROM_EMAIL`
+
+`SECRET_KEY` dibuat otomatis oleh Render. Jangan mengunggah file `.env`. Setelah deploy selesai, health check tersedia di `/api/health`.
+
 ## Endpoint
 
 - `GET /api/health` cek status API dan database
