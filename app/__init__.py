@@ -10,12 +10,22 @@ from app.routes.progress_routes import progress_bp
 from app.routes.leaderboard_routes import leaderboard_bp
 from app.routes.translate_routes import translate_bp
 from app.routes.quiz_routes import quiz_bp
+import os
+import firebase_admin
+from firebase_admin import credentials
 from app.routes.admin_routes import admin_bp
 
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+
+    # Initialize Firebase Admin
+    firebase_cred_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'firebase.json')
+    if os.path.exists(firebase_cred_path):
+        if not firebase_admin._apps:
+            cred = credentials.Certificate(firebase_cred_path)
+            firebase_admin.initialize_app(cred)
 
     CORS(app)
     init_db(app)

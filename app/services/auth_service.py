@@ -2,8 +2,7 @@ from datetime import datetime, timedelta, timezone
 
 import jwt
 from flask import current_app
-from google.auth.transport import requests
-from google.oauth2 import id_token
+import firebase_admin.auth
 
 
 def create_access_token(user):
@@ -20,8 +19,8 @@ def create_access_token(user):
 
 
 def verify_google_id_token(token):
-    client_id = current_app.config["GOOGLE_CLIENT_ID"]
-    if not client_id:
-        raise ValueError("GOOGLE_CLIENT_ID belum diisi di .env.")
-
-    return id_token.verify_oauth2_token(token, requests.Request(), client_id)
+    try:
+        decoded_token = firebase_admin.auth.verify_id_token(token)
+        return decoded_token
+    except Exception as exc:
+        raise ValueError(f"Invalid Firebase ID token: {exc}")

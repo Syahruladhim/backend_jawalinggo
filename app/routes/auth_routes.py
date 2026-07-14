@@ -190,16 +190,16 @@ def google_login():
 
     try:
         google_user = verify_google_id_token(token)
-    except (GoogleAuthError, ValueError) as exc:
+    except (GoogleAuthError, ValueError, Exception) as exc:
         return error_response(str(exc), 401)
 
     email = google_user.get("email", "").lower()
-    google_sub = google_user.get("sub")
+    google_sub = google_user.get("uid") or google_user.get("sub")
     name = google_user.get("name", email.split("@")[0])
     picture = google_user.get("picture", "")
 
     if not email or not google_sub:
-        return error_response("Token Google tidak memiliki data email yang valid.", 401)
+        return error_response("Token Google/Firebase tidak memiliki data email/uid yang valid.", 401)
 
     now = datetime.now(timezone.utc)
     update_data = {
