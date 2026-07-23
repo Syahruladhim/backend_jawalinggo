@@ -87,7 +87,7 @@ def delete_quiz(quiz_id):
 
 
 def _load_vocabulary():
-    """Baca dataset.csv dan kembalikan list pasangan {ngoko: ..., indonesia: ...}"""
+    """Baca dataset.csv dan kembalikan list pasangan kosakata"""
     csv_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'dataset.csv')
     vocab = []
     try:
@@ -97,9 +97,16 @@ def _load_vocabulary():
             for row in reader:
                 if len(row) >= 4:
                     ngoko = row[0].strip()
+                    krama = row[1].strip()
+                    krama_inggil = row[2].strip()
                     indonesia = row[3].strip()
                     if ngoko and indonesia:
-                        vocab.append({"ngoko": ngoko, "indonesia": indonesia})
+                        vocab.append({
+                            "ngoko": ngoko,
+                            "krama": krama,
+                            "krama inggil": krama_inggil if krama_inggil else ngoko,
+                            "indonesia": indonesia
+                        })
     except Exception as e:
         print(f"Error reading dataset.csv: {e}")
     return vocab
