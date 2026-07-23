@@ -118,7 +118,7 @@ def _generate_pemula_quizzes(quiz_count=3, questions_per_quiz=7, pairs_per_quest
             selected = random.sample(vocab, pairs_per_question)
             matching_pairs = {}
             for item in selected:
-                matching_pairs[item["ngoko"]] = item["indonesia"]
+                matching_pairs[item["krama inggil"]] = item["indonesia"]
             questions.append({
                 "type": "matchingPairs",
                 "instruction": "Cocokan kata dibawah ini !",

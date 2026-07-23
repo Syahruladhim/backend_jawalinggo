@@ -70,10 +70,16 @@ def complete_quiz():
         # Selalu update persentase dengan hasil terbaru
         level_percentages[quiz_index_str] = percentage
 
-        # Buka level berikutnya jika menyelesaikan level yang sedang aktif
-        new_user_progress = current_user_progress
-        if quiz_index == current_user_progress and current_user_progress < 14:
-            new_user_progress = current_user_progress + 1
+        # Buka level berikutnya jika menyelesaikan level yang sedang aktif DAN lulus
+        # Validasi ulang user_progress berdasarkan completed_quizzes agar state tidak corrupt
+        calculated_progress = 0
+        for i in range(15):
+            if i in completed:
+                calculated_progress = i + 1
+            else:
+                break
+        
+        new_user_progress = min(calculated_progress, 14)
 
         get_db().user_progress.update_one(
             {"user_id": user_id},
